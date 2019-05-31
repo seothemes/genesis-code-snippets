@@ -1,0 +1,45 @@
+.CodeMirror {
+	border: 1px solid #ddd;
+	height: calc(100vh - 250px);
+}
+
+.genesis-code-snippets textarea {
+	height: calc(100vh - 250px);
+	width: 100%;
+}
+
+.CodeMirror-gutters {
+	min-width: 28px;
+}
+
+.wide-tabs a {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.genesis-code-snippets .form-table td {
+	padding: 1em 0;
+}
+
+.genesis-code-snippets .form-table th {
+	display: none;
+}
+
+#genesis-code-snippets-php + .CodeMirror .CodeMirror-sizer:before {
+	content: "<?php";
+	color: #bbb;
+	display: block;
+	padding: 2px;
+}
+
+#genesis-code-snippets-js + .CodeMirror .CodeMirror-sizer:before,
+#genesis-code-snippets-js + .CodeMirror .CodeMirror-sizer:after {
+	content: "jQuery(function ($) {";
+	color: #bbb;
+	display: block;
+	padding: 2px;
+}
+
+#genesis-code-snippets-js + .CodeMirror .CodeMirror-sizer:after {
+	content: "});";
+}

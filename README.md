@@ -2,6 +2,8 @@
 
 Makes adding custom code snippets to Genesis powered site easy.
 
+**Important:** This plugin is for example purposes only. DO NOT USE in production!
+
 ## Usage
 
 ### PHP

@@ -1,6 +1,6 @@
-.CodeMirror {
+div.CodeMirror {
 	border: 1px solid #ddd;
-	height: calc(100vh - 250px);
+	height: calc(100vh - 300px);
 }
 
 .genesis-code-snippets textarea {
@@ -19,6 +19,12 @@
 
 .genesis-code-snippets .form-table td {
 	padding: 1em 0;
+}
+
+.genesis-code-snippets h2 {
+	opacity: 0;
+	height: 0;
+	margin: 10px;
 }
 
 .genesis-code-snippets .form-table th {

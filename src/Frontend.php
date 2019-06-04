@@ -43,10 +43,11 @@ class Frontend extends Plugin {
 		if ( is_readable( $file ) ) {
 			require_once $file;
 
-			return;
+		} else {
+			eval( $this->php );
 		}
 
-		eval( $this->php );
+		return;
 	}
 
 	/**
@@ -73,11 +74,8 @@ class Frontend extends Plugin {
 		);
 
 		if ( ! file_exists( $path ) ) {
-
-			// Add inline style for child theme.
-			wp_add_inline_style( genesis_get_theme_handle(), $this->css );
+			wp_add_inline_style( get_stylesheet(), $this->css );
 		}
-
 	}
 
 	/**

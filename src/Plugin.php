@@ -70,9 +70,14 @@ class Plugin {
 	protected $cache;
 
 	/**
-	 * @var array
+	 * @var Admin
 	 */
-	protected $services;
+	protected $admin;
+
+	/**
+	 * @var Frontend
+	 */
+	protected $frontend;
 
 	/**
 	 * Plugin constructor.
@@ -80,19 +85,70 @@ class Plugin {
 	 * @param $file
 	 */
 	public function __construct( $file ) {
-		$this->file     = $file;
-		$this->dir      = dirname( $file );
-		$this->url      = plugin_dir_url( $file );
-		$this->data     = $this->get_data( $file );
-		$this->name     = $this->data['name'];
-		$this->version  = $this->data['version'];
-		$this->handle   = $this->data['handle'];
-		$this->types    = [ 'php', 'css', 'js' ];
-		$this->php      = get_option( $this->prefix( 'php' ) );
-		$this->css      = get_option( $this->prefix( 'css' ) );
-		$this->js       = get_option( $this->prefix( 'js' ) );
-		$this->cache    = WP_CONTENT_DIR . '/cache/';
-		$this->services = [ 'Admin', 'Settings', 'Frontend' ];
+		$this->file    = $file;
+		$this->dir     = dirname( $file );
+		$this->url     = plugin_dir_url( $file );
+		$this->data    = $this->get_data( $file );
+		$this->name    = $this->data['name'];
+		$this->version = $this->data['version'];
+		$this->handle  = $this->data['handle'];
+		$this->types   = [ 'php', 'css', 'js' ];
+		$this->php     = get_option( $this->prefix( 'php' ) );
+		$this->css     = get_option( $this->prefix( 'css' ) );
+		$this->js      = get_option( $this->prefix( 'js' ) );
+		$this->cache   = WP_CONTENT_DIR . '/cache/';
+	}
+
+	/**
+	 * Initialize plugin.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function run() {
+		add_action( 'plugins_loaded', [ $this, 'load_textdomain' ] );
+		add_action( 'plugins_loaded', [ $this, 'load_admin' ] );
+		add_action( 'plugins_loaded', [ $this, 'load_frontend' ] );
+	}
+
+	/**
+	 * Load plugin textdomain
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( $this->handle, false, basename( $this->dir ) . '/assets/' );
+	}
+
+	/**
+	 * Load admin functionality.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function load_admin() {
+		if ( is_admin() ) {
+			$this->admin = new Admin( $this->file );
+			$this->admin->run();
+		}
+	}
+
+	/**
+	 * Load frontend functionality.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function load_frontend() {
+		if ( ! is_admin() ) {
+			$this->frontend = new Frontend( $this->file );
+			$this->frontend->run();
+		}
 	}
 
 	/**
@@ -119,44 +175,6 @@ class Plugin {
 	}
 
 	/**
-	 * Run plugin hooks.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function run() {
-		add_action( 'plugins_loaded', [ $this, 'load_textdomain' ] );
-		add_action( 'plugins_loaded', [ $this, 'register' ] );
-	}
-
-	/**
-	 * Load plugin textdomain
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain( $this->handle, false, basename( $this->dir ) . '/assets/' );
-	}
-
-	/**
-	 * Register services.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function register() {
-		foreach ( $this->services as $service ) {
-			$service = __NAMESPACE__ . '\\' . $service;
-			$class   = new $service( $this->file );
-			$class->run();
-		}
-	}
-
-	/**
 	 * Utility method to prefix a given string.
 	 *
 	 * @since 1.0.0
@@ -165,7 +183,7 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	protected function prefix( $string ) {
+	protected function prefix( $string = '' ) {
 		return $this->handle . '-' . $string;
 	}
 }

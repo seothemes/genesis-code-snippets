@@ -2,24 +2,15 @@
 
 namespace SeoThemes\GenesisCodeSnippets;
 
-class Frontend {
+/**
+ * Class Frontend
+ *
+ * @package SeoThemes\GenesisCodeSnippets
+ */
+class Frontend extends Plugin {
 
 	/**
-	 * @var Plugin
-	 */
-	private $plugin;
-
-	/**
-	 * Frontend constructor.
-	 *
-	 * @param Plugin $plugin Plugin instance.
-	 */
-	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-	}
-
-	/**
-	 * Description of expected behavior.
+	 * Run frontend hooks.
 	 *
 	 * @since 1.0.0
 	 *
@@ -36,18 +27,18 @@ class Frontend {
 	}
 
 	/**
-	 * Description of expected behavior.
+	 * Load custom PHP.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	function load_php() {
-		if ( is_admin() || ! $this->plugin->php ) {
+		if ( is_admin() || ! $this->php ) {
 			return;
 		}
 
-		$file = $this->plugin->cache . $this->plugin->handle . '.php';
+		$file = $this->cache . $this->handle . '.php';
 
 		if ( is_readable( $file ) ) {
 			require_once $file;
@@ -55,26 +46,26 @@ class Frontend {
 			return;
 		}
 
-		eval( $this->plugin->php );
+		eval( $this->php );
 	}
 
 	/**
-	 * Description of expected behavior.
+	 * Load custom CSS.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	function load_css() {
-		if ( ! $this->plugin->css ) {
+		if ( ! $this->css ) {
 			return;
 		}
 
-		$path = $this->plugin->cache . $this->plugin->handle . '.css';
-		$url  = content_url( '/cache/' . $this->plugin->handle . '.css' );
+		$path = $this->cache . $this->handle . '.css';
+		$url  = content_url( '/cache/' . $this->handle . '.css' );
 
 		wp_enqueue_style(
-			$this->plugin->handle,
+			$this->handle,
 			file_exists( $path ) ? $url : '',
 			[],
 			false,
@@ -84,28 +75,28 @@ class Frontend {
 		if ( ! file_exists( $path ) ) {
 
 			// Add inline style for child theme.
-			wp_add_inline_style( genesis_get_theme_handle(), $this->plugin->css );
+			wp_add_inline_style( genesis_get_theme_handle(), $this->css );
 		}
 
 	}
 
 	/**
-	 * Description of expected behavior.
+	 * Load custom JS.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	function load_js() {
-		if ( '' === $this->plugin->js ) {
+		if ( '' === $this->js ) {
 			return;
 		}
 
-		$path = $this->plugin->cache . $this->plugin->handle . '.js';
-		$url  = content_url( '/cache/' . $this->plugin->handle . '.js' );
+		$path = $this->cache . $this->handle . '.js';
+		$url  = content_url( '/cache/' . $this->handle . '.js' );
 
 		wp_enqueue_script(
-			$this->plugin->handle,
+			$this->handle,
 			file_exists( $path ) ? $url : '',
 			[ 'jquery' ],
 			false,
@@ -116,7 +107,7 @@ class Frontend {
 			?>
 			<script type="text/javascript">
                 jQuery(function ($) {
-					<?php echo $this->plugin->js; ?>
+					<?php echo $this->js; ?>
                 });
 			</script>
 			<?php

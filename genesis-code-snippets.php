@@ -14,9 +14,17 @@
 
 namespace SeoThemes\GenesisCodeSnippets;
 
-// Load plugin.
-require_once __DIR__ . '/src/class-plugin.php';
+// Load classes.
+spl_autoload_register( function ( $class ) {
+	$file = __DIR__ . '/src/' . substr( strrchr( $class, '\\' ), 1 ) . '.php';
 
-// Run plugin.
+	if ( is_readable( $file ) ) {
+		require_once $file;
+	}
+} );
+
+// Initialize plugin.
 $genesis_code_snippets = new Plugin( __FILE__ );
+
+// Run.
 $genesis_code_snippets->run();
